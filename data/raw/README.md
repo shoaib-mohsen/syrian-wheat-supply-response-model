@@ -14,10 +14,12 @@ were edited, replaced, or manipulated.**
 * Production (tons)
 * Cultivated Area (hectares)
 * Yield (tons/hectare)
-* Government Procurement Price (Syrian Lira per ton)
+* wheat Price (Syrian Lira per ton)
 * Agriculture Stress Index (ASI)
 * Inflation (GDP Deflator)
 * Political Stability
+* Cotton Price (Syrian Lira per ton)
+* Barley Price (Syrian Lira per ton)
 
 ## Data Sources
 
@@ -25,7 +27,7 @@ were edited, replaced, or manipulated.**
 
 The following variables were primarily compiled from publications of the
 Syrian Ministry of Agriculture: - Wheat production - Cultivated area -
-Yield - Government procurement price
+Yield - wheat Price - Cotton Price - Barley Price
 
 ### FAO
 
