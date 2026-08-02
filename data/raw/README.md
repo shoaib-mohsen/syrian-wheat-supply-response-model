@@ -14,7 +14,7 @@ were edited, replaced, or manipulated.**
 * Production (tons)
 * Cultivated Area (hectares)
 * Yield (tons/hectare)
-* wheat Price (Syrian Lira per ton)
+* Wheat Price (Syrian Lira per ton)
 * Agriculture Stress Index (ASI)
 * Inflation (GDP Deflator)
 * Political Stability
