@@ -10,49 +10,66 @@ library("readr")
 source("R/01_import_data.R")
 
 # Fixing variable types
-data$year <- as.integer(data$year)
+raw_data$year <- as.integer(raw_data$year)
+
+# creating the full_data dataset
+full_data <- raw_data
 
 # Creating derived variables
 
 ## Calculating real prices
 
-data$ln_real_cotton_price <- log((data$cotton_price/data$gdp_deflator)*100)
-data$ln_real_barley_price <- log((data$barley_price/data$gdp_deflator)*100)
-data$ln_real_wheat_price <- log((data$wheat_price/data$gdp_deflator)*100)
+full_data$ln_real_cotton_price <- log((full_data$cotton_price/full_data$gdp_deflator)*100)
+full_data$ln_real_barley_price <- log((full_data$barley_price/full_data$gdp_deflator)*100)
+full_data$ln_real_wheat_price <- log((full_data$wheat_price/full_data$gdp_deflator)*100)
 
 ## Creating logarithmic transformations
 
-data$ln_production <- log(data$production)
-data$ln_area <- log(data$area)
-data$ln_yield <- log(data$yield)
-data$ln_asi <- log(data$asi)
-data$ln_political_stability <- log(data$political_stability)
+full_data$ln_production <- log(full_data$production)
+full_data$ln_area <- log(full_data$area)
+full_data$ln_yield <- log(full_data$yield)
+full_data$ln_asi <- log(full_data$asi)
+full_data$ln_political_stability <- log(full_data$political_stability)
 
 # Verifying
-any(data == Inf)
-any(data == -Inf)
-any(is.na(data))
-lapply(data, function(x) any(is.nan(x)))
+any(full_data == Inf)
+any(full_data == -Inf)
+any(is.na(full_data))
+lapply(full_data, function(x) any(is.nan(x)))
 
 # Inspect processed data
 
-str(data)
+str(full_data)
 
-summary(data)
+summary(full_data)
 
-head(data)
+head(full_data)
 
 # Check for missing values
 
-colSums(is.na(data))
+colSums(is.na(full_data))
 
 # Verify data dimensions
 
-dim(data)
+dim(full_data)
 
 # Verify time range
 
-range(data$year)
+range(full_data$year)
+
+# creating the model data
+model_data <- select(
+  full_data,
+  c(year,
+    ln_area,
+    ln_production,
+    ln_yield,
+    ln_asi,
+    ln_political_stability,
+    ln_real_wheat_price,
+    ln_real_cotton_price,
+    ln_real_barley_price))
 
 # Saving processed data
-write_csv(data, "data/processed/data.csv")
+write_csv(full_data, "data/processed/full_data.csv")
+write_csv(model_data, "data/processed/model_data.csv")

@@ -9,11 +9,11 @@ library("readxl")
 
 # Importing raw dataset
 
-data <- read_xlsx("data/raw/data.xlsx")
+raw_data <- read_xlsx("data/raw/data.xlsx")
 
 # Renaming variables
 
-colnames(data) <- c(
+colnames(raw_data) <- c(
   "year",
   "production",
   "area",
@@ -27,24 +27,24 @@ colnames(data) <- c(
 
 # Inspect imported data
 
-str(data)
+str(raw_data)
 
-summary(data)
+summary(raw_data)
 
-head(data)
+head(raw_data)
 
 # Check for missing values
 
-colSums(is.na(data))
+colSums(is.na(raw_data))
 
 # Check duplicates
 
-any(duplicated(data$year))
+any(duplicated(raw_data$year))
 
 # Verify data dimensions
 
-dim(data)
+dim(raw_data)
 
 # Verify time range
 
-range(data$year)
+range(raw_data$year)
