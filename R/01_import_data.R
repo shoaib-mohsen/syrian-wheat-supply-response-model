@@ -3,7 +3,7 @@
 # Purpose: Import raw data and perform basic validation
 # Author : Shoaib Mohsen
 
-# Loading 'readxl' package
+# # loading needed packages
 
 library("readxl")
 
@@ -20,7 +20,7 @@ colnames(data) <- c(
   "yield",
   "wheat_price",
   "asi", 
-  "inflation", 
+  "gdp_deflator", 
   "political_stability",
   "cotton_price",
   "barley_price")

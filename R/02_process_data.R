@@ -1,6 +1,6 @@
 # Project: Syrian Wheat Supply Response
 # Script : 02_process_data.R
-# Purpose: Processing data to an analysis-ready dataset
+# Purpose: Processing data into an analysis-ready dataset
 # Author : Shoaib Mohsen
 
 # loading needed packages
@@ -16,9 +16,9 @@ data$year <- as.integer(data$year)
 
 ## Calculating real prices
 
-data$ln_real_cotton_price <- log(data$cotton_price/data$inflation)
-data$ln_real_barley_price <- log(data$barley_price/data$inflation)
-data$ln_real_wheat_price <- log(data$wheat_price/data$inflation)
+data$ln_real_cotton_price <- log((data$cotton_price/data$gdp_deflator)*100)
+data$ln_real_barley_price <- log((data$barley_price/data$gdp_deflator)*100)
+data$ln_real_wheat_price <- log((data$wheat_price/data$gdp_deflator)*100)
 
 ## Creating logarithmic transformations
 
@@ -27,9 +27,8 @@ data$ln_area <- log(data$area)
 data$ln_yield <- log(data$yield)
 data$ln_asi <- log(data$asi)
 data$ln_political_stability <- log(data$political_stability)
-data$ln_inflation <- log(data$inflation)
 
-#Verifying
+# Verifying
 any(data == Inf)
 any(data == -Inf)
 any(is.na(data))
@@ -55,5 +54,5 @@ dim(data)
 
 range(data$year)
 
-#saving processed data
+# Saving processed data
 write_csv(data, "data/processed/data.csv")

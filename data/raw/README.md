@@ -10,14 +10,14 @@ were edited, replaced, or manipulated.**
 
 ## Variables
 
-* Year
+* Year (2002 to 2023)
 * Production (tons)
 * Cultivated Area (hectares)
 * Yield (tons/hectare)
 * Wheat Price (Syrian Lira per ton)
 * Agriculture Stress Index (ASI)
-* Inflation (GDP Deflator)
-* Political Stability
+* GDP Deflator (Base Year = 2000)
+* Political Stability (0 to 100)
 * Cotton Price (Syrian Lira per ton)
 * Barley Price (Syrian Lira per ton)
 
