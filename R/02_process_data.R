@@ -23,6 +23,7 @@ full_data$ln_real_cotton_price <- log((full_data$cotton_price/full_data$gdp_defl
 full_data$ln_real_barley_price <- log((full_data$barley_price/full_data$gdp_deflator)*100)
 full_data$ln_real_wheat_price <- log((full_data$wheat_price/full_data$gdp_deflator)*100)
 
+
 ## Creating logarithmic transformations
 
 full_data$ln_production <- log(full_data$production)
