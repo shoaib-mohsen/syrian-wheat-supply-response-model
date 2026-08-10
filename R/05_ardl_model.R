@@ -30,7 +30,8 @@
 # Farmers maximize profit while facing different sources of risk.
 
 # Institutional risk: lagged political stability is used as a proxy
-# for the expected institutional environment/risk
+# for the expected institutional environment/risk. Moreover, it highly
+# reflects the conflict happened after 2011
 
 # Climate risk: lagged Agriculture Stress Index is used as a proxy
 # for expected climate conditions, assuming perfect climate forecasts
@@ -47,13 +48,15 @@
 # Cotton and barley are the only fully available data that can
 # be considered competing crops to wheat from the supply side.
 
-# Loading the required packages
+# Loading the required packages and scripts
 
 library(ARDL)
 library(lmtest)
 library(tibble)
 library(MuMIn)
 library(dplyr)
+
+source("R/04_stationarity_tests.R")
 
 # Initializing data needed for the model
 
@@ -253,6 +256,15 @@ models <- list(
   barley_extended_model = barley_extended_model$best_model
 )
 
+orders <- list(
+  baseline_model = baseline_model$best_order,
+  basic_model = basic_model$best_order,
+  full_extended_model = full_extended_model$best_order,
+  cotton_extended_model = cotton_extended_model$best_order,
+  barley_extended_model = barley_extended_model$best_order
+)
+
+
 ardl_table <- tibble(
   model_names = names(models),
   AICc = sapply(models, AICc),
@@ -262,7 +274,8 @@ ardl_table <- tibble(
   AIC = sapply(models, AIC),
   Adj_R2 = sapply(models, \(m) summary(m)$adj.r.squared),
   Residual_SE = sapply(models, sigma),
-  models = I(models)
+  models = models,
+  orders = orders
 )
 
 print(ardl_table)
@@ -282,3 +295,33 @@ print(ardl_table)
 # Economic interpretation, multicollinearity, residual diagnostics,
 # parameter stability, cointegration, and robustness will be examined
 # before the final model is committed.
+
+
+# Bounds test for cointegration
+
+# Although ln_area exhibits a downward trend on visual inspection,
+# institutional and political conditions following the conflict, which
+# is reflected in the political stability index, is expected to account 
+# for part of the observed trend. Consequently, a deterministic trend is 
+# not imposed in the baseline model. However, The robustness analysis will
+# examine the model's sensitivity to the treatment of the trend term
+
+bounds_test <- bounds_f_test(
+  baseline_model$best_model,
+  case = 3
+)
+
+bounds_test
+
+multipliers(baseline_model$best_model)
+
+# Bounds test suggests that a long-run equilibrium  
+# relationship exists between baseline model variables 
+
+recm <- recm(baseline_model$best_model, case = 3)
+
+summary(recm)
+
+uecm <- uecm(baseline_model$best_model, case = 3)
+
+summary(uecm)
