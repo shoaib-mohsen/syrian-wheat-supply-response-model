@@ -3,8 +3,16 @@
 # Purpose: all needed functions
 # Author : Shoaib Mohsen
 
-library(lmtest)
 library(sandwich)
+library(ARDL)
+library(lmtest)
+library(tibble)
+library(MuMIn)
+library(dplyr)
+library(lmtest)
+library(tseries)
+library(strucchange)
+
 
 # Converting R table to Word file 
 get_doc <- function(tb, caption){
@@ -470,7 +478,7 @@ get_ers_result <- function(data, alpha = 0.05) {
       
       # --- 3. ESTIMATION DETAILS (Crucial for Papers) ---
       lags_selected,       # The exact lag length chosen by AIC
-      effective_n# Effective sample size after differencing/lagging
+      effective_n # Effective sample size after differencing/lagging
     ),               # The significance level used (e.g., 0.05)
     
     # --- 4. TRACEABILITY & REPLICATION --- 
@@ -479,3 +487,282 @@ get_ers_result <- function(data, alpha = 0.05) {
   
 }
 
+get_diagnostics <- function(m,lm_obj,years,alpha=0.05) {
+  
+  n <- nobs(lm_obj)
+  
+  k <- length(coef(lm_obj))
+  
+  # 1. Serial Correlation: Breusch-Godfrey Test
+  # Null Hypothesis: No serial correlation up to order p
+  
+  bg <- bgtest(m, order = 2)
+  
+  # 2. Heteroskedasticity: Breusch-Pagan Test
+  # Null Hypothesis: Homoskedastic errors (constant variance)
+  
+  bp <- bptest(m)
+  
+  # 3. Functional Form: Ramsey RESET Test
+  # Null Hypothesis: Correct functional form (no omitted non-linearities)
+  
+  reset <- resettest(m, power = 2:3, type = "fitted")
+  
+  # 4. Residual Normality: Jarque-Bera Test & Shapiro-Wilk Test
+  # Null Hypothesis: Residuals are normally distributed
+  
+  jb <- jarque.bera.test(residuals(m))
+  
+  sw <- shapiro.test(residuals(m))
+  
+  # 5. Structural Stability: CUSUM & MOSUM
+  # Null Hypothesis: statistical model's parameters are stable and constant over time
+  
+  cusum_test <- efp(
+    formula(lm_obj), 
+    data = lm_obj$model, 
+    type = "OLS-CUSUM"
+  )
+  
+  cusum <- sctest(cusum_test)
+
+  
+  mosum_test <- efp(
+    formula(lm_obj),
+    data = lm_obj$model,
+    type = "OLS-MOSUM"
+  )
+  
+  mosum <- sctest(mosum_test)
+  
+  
+  # 6. Influential Data Points: studentized residuals, leverage, Cook's distance, and DFBETAs tests
+  # Null Hypothesis: a data point is typical, has no unusual influence.
+  
+  studentized_resid <- rstudent(lm_obj)
+  
+  studentized_table <- data.frame(
+    Observation = seq_along(studentized_resid),
+    Year = years,
+    Studentized_Residual = studentized_resid
+  )
+  
+  df_val <- df.residual(lm_obj) - 1 
+  
+  bonferroni_crit <- qt(1 - alpha / (2 * n), df = df_val)
+  
+  studentized_table$Potentially_Unusual <-
+    abs(studentized_table$Studentized_Residual) > bonferroni_crit
+  
+  leverage <- hatvalues(lm_obj)
+  
+  leverage_cutoff_2 <- 2 * k / n
+  leverage_cutoff_3 <- 3 * k / n
+  
+  leverage_table <- data.frame(
+    Observation = seq_along(leverage),
+    Year = years,
+    Leverage = leverage
+  )
+  
+  
+  leverage_table$High_Leverage <-
+    leverage_table$Leverage > leverage_cutoff_2
+  
+  
+  cooks_d <- cooks.distance(lm_obj)
+  
+  cooks_cutoff <- 4 / n
+  
+  cooks_table <- data.frame(
+    Observation = seq_along(cooks_d),
+    Year = years,
+    Cooks_Distance = cooks_d
+  )
+  
+  cooks_table$Potentially_Influential <-
+    cooks_table$Cooks_Distance > cooks_cutoff
+  
+  dfbetas_values <- dfbetas(lm_obj)
+  
+  dfbeta_cutoff <- 2 / sqrt(n)
+  
+  # Identify observations affecting at least one coefficient
+  
+  dfbeta_flag <- apply(
+    abs(dfbetas_values),
+    1,
+    function(x) any(x > dfbeta_cutoff)
+  )
+  
+  dfbeta_table <- data.frame(
+    Observation = seq_len(n),
+    Year = years,
+    dfbetas_values,
+    Potentially_Influential = dfbeta_flag
+  )
+
+  
+  dffits_values <- dffits(lm_obj)
+  
+  dffits_cutoff <- 2 * sqrt(k / n)
+  
+  dffits_table <- data.frame(
+    Observation = seq_along(dffits_values),
+    Year = years,
+    DFFITS = dffits_values
+  )
+  
+  dffits_table$Potentially_Influential <-
+    abs(dffits_table$DFFITS) > dffits_cutoff
+  
+  
+  # Combined Influence Summary
+  
+  influence_summary <- data.frame(
+    Year = years,
+    Studentized_Residual = studentized_resid,
+    Leverage = leverage,
+    Cooks_Distance = cooks_d,
+    DFFITS = dffits_values,
+    DFBETA_Flag = dfbeta_flag
+  )
+  
+  influence_summary$Residual_Flag <-
+    abs(influence_summary$Studentized_Residual) > bonferroni_crit
+  
+  influence_summary$Leverage_Flag <-
+    influence_summary$Leverage > leverage_cutoff_2
+  
+  influence_summary$Cook_Flag <-
+    influence_summary$Cooks_Distance > cooks_cutoff
+  
+  influence_summary$DFFITS_Flag <-
+    abs(influence_summary$DFFITS) > dffits_cutoff
+  
+  influence_summary$Number_of_Flags <-
+    rowSums(
+      influence_summary[
+        ,
+        c(
+          "Residual_Flag",
+          "Leverage_Flag",
+          "Cook_Flag",
+          "DFFITS_Flag",
+          "DFBETA_Flag"
+        )
+      ]
+    )
+  
+    na.omit(influence_summary[
+      influence_summary$Number_of_Flags >= 2,
+    ])$Year
+
+   
+   list(
+     main_diagnostics = tibble(
+       bg_stat = unname(bg$statistic),    bg_p = bg$p.value,
+       bp_stat = unname(bp$statistic),    bp_p = bp$p.value,
+       reset_stat = unname(reset$statistic), reset_p = reset$p.value,
+       jb_stat = unname(jb$statistic),    jb_p = jb$p.value,
+       sw_stat = unname(sw$statistic),    sw_p = sw$p.value,
+       cusum_stat = unname(cusum$statistic), cusum_p = cusum$p.value,
+       mosum_stat = unname(mosum$statistic), mosum_p = mosum$p.value,
+       n.o.influentials = length(na.omit(influence_summary[
+         influence_summary$Number_of_Flags >= 2,
+       ])$Year)
+     ),
+     influential_diagnostics = tibble(
+       influence_summary <- influence_summary
+     )
+   )
+   
+}
+
+long_run_tests <- function(model){
+  
+  bounds_test <- bounds_f_test(
+    model,
+    case = 3
+  )
+  
+  bounds_results <- tibble(
+    Statistic = "F-statistic",
+    Value = as.numeric(bounds_test$statistic),
+    k = as.numeric(bounds_test$null.value["k"]),
+    p_value = as.numeric(bounds_test$p.value),
+    Case = 3,
+    Conclusion = ifelse(
+      bounds_test$p.value < 0.01,
+      "Evidence of cointegration at the 1% level",
+      "Insufficient evidence of cointegration"
+    )
+  )
+  
+  long_run_results <- as.data.frame(
+    multipliers(model)
+  )
+  
+  list(bounds_test = bounds_test,long_run_results = long_run_results )
+}
+
+short_run_tests <- function(model){
+  recm_model <- recm(model, case = 3)
+  
+  recm_results <- as.data.frame(
+    summary(recm_model)$coefficients
+  )
+  
+  
+  uecm_model <- uecm(model, case = 3)
+  
+  uecm_results <- as.data.frame(
+    summary(uecm_model)$coefficients
+  )
+  
+  
+  list(uecm_results = uecm_results,  recm_results =  recm_results )
+}
+
+build_summary_row <- function(model_id, ardl_model, lm_obj, data_used) {
+  
+  s <- summary(ardl_model$best_model)
+  n <- nobs(lm_obj)
+  k <- length(coef(lm_obj))
+  
+  model <- ardl_model$best_model
+  used_rows <- as.numeric(rownames(model$model))
+  years <- ifelse(model_id=="baseline",used_rows,data_used$year[used_rows])
+  
+  diag <- get_diagnostics(ardl_model$best_model, lm_obj, years)$main_diagnostics
+  
+  bt <- long_run_tests(ardl_model$best_model)$bounds_test
+  lr <- long_run_tests(ardl_model$best_model)$long_run_results
+  recm <- short_run_tests(ardl_model$best_model)$recm_results
+  
+  tibble(
+    model_id   = model_id,
+    n          = n,
+    k          = k,
+    aicc       = AICc(ardl_model$best_model)[1],
+    r2         = s$r.squared[1],
+    adj_r2     = s$adj.r.squared[1],
+    
+    bounds_F   = unname(bt$statistic)[1],
+
+    bounds_p   = as.numeric(bt$p.value)[1], 
+
+    ect_coef   = recm["ect", "Estimate"][1],
+    ect_p      = recm["ect", "Pr(>|t|)"][1],
+    
+    lr_price   = lr$Estimate[lr$Term == "lagged_ln_real_wheat_price"][1],
+    lr_price_p = lr$`Pr(>|t|)`[lr$Term == "lagged_ln_real_wheat_price"][1],
+    
+    lr_yield   = lr$Estimate[lr$Term == "lagged_ln_yield"][1],
+    lr_yield_p = lr$`Pr(>|t|)`[lr$Term == "lagged_ln_yield"][1],
+    
+    lr_polstab = lr$Estimate[lr$Term == "lagged_ln_political_stability"][1],
+    lr_polstab_p = lr$`Pr(>|t|)`[lr$Term == "lagged_ln_political_stability"][1]
+  ) %>%
+    bind_cols(diag)
+}

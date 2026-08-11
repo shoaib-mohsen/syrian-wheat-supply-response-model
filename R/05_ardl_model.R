@@ -57,6 +57,7 @@ library(MuMIn)
 library(dplyr)
 
 source("R/04_stationarity_tests.R")
+source("R/functions.R")
 
 # Initializing data needed for the model
 
@@ -107,7 +108,8 @@ vars_to_lag <- c(
   "ln_real_cotton_price",
   "ln_yield",
   "ln_asi",
-  "ln_political_stability"
+  "ln_political_stability",
+  "ln_area"
 )
 
 lagged_vars <- stats::lag(ardl_ts[, vars_to_lag], k = -1)
@@ -296,6 +298,11 @@ print(ardl_table)
 # parameter stability, cointegration, and robustness will be examined
 # before the final model is committed.
 
+baseline_coefficients <- as.data.frame(
+  summary(baseline_model$best_model)$coefficients
+)
+
+print(baseline_coefficients)
 
 # Bounds test for cointegration
 
@@ -306,22 +313,45 @@ print(ardl_table)
 # not imposed in the baseline model. However, The robustness analysis will
 # examine the model's sensitivity to the treatment of the trend term
 
-bounds_test <- bounds_f_test(
-  baseline_model$best_model,
-  case = 3
+m <- baseline_model$best_model
+
+bounds_results <- long_run_tests(m)$bounds_test
+
+long_run_results <- long_run_tests(m)$long_run_results
+
+print(bounds_results)
+
+print(long_run_results)
+
+# The bounds test rejects the null hypothesis of no cointegration
+# at the 1% significance level, providing evidence of a long-run
+# equilibrium relationship among the baseline model variables.
+# The long-run wheat-price elasticity is statistically significant
+# at the 10% level, while the long-run yield effect is significant
+# at the 5% level and the political-stability effect is significant
+# at the 1% level.
+  
+  uecm_results <- short_run_tests(m)$uecm_results
+  
+  recm_results <- short_run_tests(m)$recm_results
+  
+  print(uecm_results)
+  
+  print(recm_results)
+
+# The error-correction coefficient is negative and statistically
+# significant, indicating adjustment toward the estimated long-run
+# equilibrium following short-run deviations.
+# The short-run coefficient are statistically significant at 5% or lower
+
+ardl_results <- list(
+  model_comparison = ardl_table,
+  baseline_model = baseline_model$best_model,
+  baseline_order = baseline_model$best_order,
+  baseline_coefficients = baseline_coefficients,
+  bounds_test = bounds_results,
+  long_run = long_run_results,
+  recm = recm_results,
+  uecm = uecm_results
 )
 
-bounds_test
-
-multipliers(baseline_model$best_model)
-
-# Bounds test suggests that a long-run equilibrium  
-# relationship exists between baseline model variables 
-
-recm <- recm(baseline_model$best_model, case = 3)
-
-summary(recm)
-
-uecm <- uecm(baseline_model$best_model, case = 3)
-
-summary(uecm)
