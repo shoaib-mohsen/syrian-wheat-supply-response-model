@@ -5,11 +5,11 @@
 
 # # loading needed packages
 
-library("readxl")
+library(readxl)
 
 # Importing raw dataset
 
-raw_data <- read_xlsx("data/raw/data.xlsx")
+raw_data <- read_excel("data/raw/data.xlsx", sheet = "1")
 
 # Renaming variables
 

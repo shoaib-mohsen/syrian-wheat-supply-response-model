@@ -4,7 +4,6 @@
 # Author : Shoaib Mohsen
 
 source("R/functions.R")
-source("R/05_ardl_model.R")
 
 rob_data <- as.data.frame(ardl_ts)
 

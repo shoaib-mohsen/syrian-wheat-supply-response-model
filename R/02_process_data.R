@@ -5,9 +5,7 @@
 
 # loading needed packages
 library("readr")
-
-# importing the and inspecting the data
-source("R/01_import_data.R")
+library(dplyr)
 
 # Fixing variable types
 raw_data$year <- as.integer(raw_data$year)
