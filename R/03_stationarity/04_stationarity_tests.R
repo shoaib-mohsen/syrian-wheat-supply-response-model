@@ -5,9 +5,6 @@
 
 # Loading the required scripts and packages
 
-source("R/03_descriptive_statistics.R")
-
-
 library(dplyr)
 library(tseries)
 library(urca)

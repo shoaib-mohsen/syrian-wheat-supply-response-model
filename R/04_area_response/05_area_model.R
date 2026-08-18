@@ -56,7 +56,6 @@ library(tibble)
 library(MuMIn)
 library(dplyr)
 
-source("R/04_stationarity_tests.R")
 source("R/functions.R")
 
 # Initializing data needed for the model

@@ -17,8 +17,6 @@ options(scipen = 999)
 
 source("R/functions.R")
 
-source("R/02_process_data.R")
-
 # Generating a summary table for the dataset
 
 summary_table <- get_summary_table(full_data)
@@ -53,13 +51,13 @@ print(conflict_summary, width = Inf)
 
 # Exporting tables to Word documents
 
-print(get_doc(summary_table, caption = "Table 1. Descriptive Statistics"), target = "output/tables/01_summary_table.docx")
+print(get_doc(summary_table, caption = "Table 1. Descriptive Statistics"), target = "output/01_area/tables/01_summary_table.docx")
 
-print(get_doc(raw_high_corrs, caption = "Table 2. Raw Data High Correlations"), target = "output/tables/02_raw_data_high_correlations_table.docx")
+print(get_doc(raw_high_corrs, caption = "Table 2. Raw Data High Correlations"), target = "output/01_area/tables/02_raw_data_high_correlations_table.docx")
 
-print(get_doc(model_high_corrs, caption = "Table 3. Model Data High Correlations"), target = "output/tables/03_model_data_high_correlations_table.docx")
+print(get_doc(model_high_corrs, caption = "Table 3. Model Data High Correlations"), target = "output/01_area/tables/03_model_data_high_correlations_table.docx")
 
-print(get_doc(pre_conflict_summary, caption = "Table 4. Pre Conflict Period Summary Statistics"), target = "output/tables/04_pre_conflict_data_summary_table.docx")
+print(get_doc(pre_conflict_summary, caption = "Table 4. Pre Conflict Period Summary Statistics"), target = "output/01_area/tables/04_pre_conflict_data_summary_table.docx")
 
-print(get_doc(conflict_summary, caption = "Table 5. Conflict Period Summary Statistics"), target = "output/tables/05_conflict_data_summary_table.docx")
+print(get_doc(conflict_summary, caption = "Table 5. Conflict Period Summary Statistics"), target = "output/01_area/tables/05_conflict_data_summary_table.docx")
 

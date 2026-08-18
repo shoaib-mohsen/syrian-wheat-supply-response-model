@@ -32,8 +32,8 @@ p0a <- ggplot(figure_data_area, aes(x = year)) +
 
 p0a
 
-ggsave("output/figures/00a_area.png", plot = p0a, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/00a_area.pdf", plot = p0a, width = 8, height = 5)
+ggsave("output/01_area/figures/00_area.png", plot = p0a, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/00_area.pdf", plot = p0a, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 0b: Real Wheat Price
@@ -59,8 +59,8 @@ p0b <- ggplot(figure_data_price, aes(x = year)) +
 
 p0b
 
-ggsave("output/figures/00b_real_price.png", plot = p0b, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/00b_real_price.pdf", plot = p0b, width = 8, height = 5)
+ggsave("output/01_area/figures/01_price.png", plot = p0b, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/01_price.pdf", plot = p0b, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 0c: Political Stability
@@ -85,8 +85,8 @@ p0c <- ggplot(figure_data_ps_single, aes(x = year)) +
 
 p0c
 
-ggsave("output/figures/00c_political_stability.png", plot = p0c, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/00c_political_stability.pdf", plot = p0c, width = 8, height = 5)
+ggsave("output/01_area/figures/02_political_stability.png", plot = p0c, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/02_political_stability.pdf", plot = p0c, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 0d: Wheat Yield
@@ -111,8 +111,8 @@ p0d <- ggplot(figure_data_yield_single, aes(x = year)) +
 
 p0d
 
-ggsave("output/figures/00d_yield.png", plot = p0d, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/00d_yield.pdf", plot = p0d, width = 8, height = 5)
+ggsave("output/01_area/figures/03_yield.png", plot = p0d, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/03_yield.pdf", plot = p0d, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 1: Crop Area vs. Lagged Wheat Price
@@ -142,8 +142,8 @@ p1 <- ggplot(figure_data, aes(x = year)) +
 
 p1
 
-ggsave("output/figures/01_area_vs_lagged_price.png", plot = p1, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/01_area_vs_lagged_price.pdf", plot = p1, width = 8, height = 5)
+ggsave("output/01_area/figures/04_area_vs_lagged_price.png", plot = p1, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/04_area_vs_lagged_price.pdf", plot = p1, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 2: Crop Area vs. Lagged Political Stability
@@ -176,8 +176,8 @@ p2 <- ggplot(figure_data_ps, aes(x = year)) +
 
 p2
 
-ggsave("output/figures/02_area_vs_lagged_political_stability.png", plot = p2, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/02_area_vs_lagged_political_stability.pdf", plot = p2, width = 8, height = 5)
+ggsave("output/01_area/figures/05_area_vs_lagged_political_stability.png", plot = p2, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/05_area_vs_lagged_political_stability.pdf", plot = p2, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 3: Crop Area vs. Lagged Yield
@@ -210,8 +210,8 @@ p3 <- ggplot(figure_data_yield, aes(x = year)) +
 
 p3
 
-ggsave("output/figures/03_area_vs_lagged_yield.png", plot = p3, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/03_area_vs_lagged_yield.pdf", plot = p3, width = 8, height = 5)
+ggsave("output/01_area/figures/06_area_vs_lagged_yield.png", plot = p3, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/06_area_vs_lagged_yield.pdf", plot = p3, width = 8, height = 5)
 
 # ------------------------------------------------------------------
 # Figure 4: Crop Area vs. Fitted Area
@@ -242,5 +242,5 @@ p4 <- ggplot(figure_data_fitted, aes(x = year)) +
 
 p4
 
-ggsave("output/figures/04_area_vs_fitted_area.png", plot = p4, width = 8, height = 5, dpi = 300)
-ggsave("output/figures/04_area_vs_fitted_area.pdf", plot = p4, width = 8, height = 5)
+ggsave("output/01_area/figures/07_area_vs_fitted_area.png", plot = p4, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/07_area_vs_fitted_area.pdf", plot = p4, width = 8, height = 5)
