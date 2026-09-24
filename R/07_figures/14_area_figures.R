@@ -9,7 +9,7 @@ library(scales)
 real_price <- (raw_data$wheat_price / raw_data$gdp_deflator) * 100
 
 # ------------------------------------------------------------------
-# Figure 0a: Wheat Area
+# Figure 00: Wheat Area
 # ------------------------------------------------------------------
 
 figure_data_area <- data.frame(
@@ -17,12 +17,12 @@ figure_data_area <- data.frame(
   area = raw_data$area
 )
 
-p0a <- ggplot(figure_data_area, aes(x = year)) +
+p0 <- ggplot(figure_data_area, aes(x = year)) +
   geom_line(aes(y = area, color = "Wheat Area", linetype = "Wheat Area"), linewidth = 0.8) +
   geom_point(aes(y = area, color = "Wheat Area"), size = 2) +
   scale_y_continuous(
     labels = label_number(scale = 1e-6),
-    name = "Figure 0a. Wheat Area (million hectares), 2002-2023"
+    name = "Figure 0. Wheat Area (million hectares), 2002-2023"
   ) +
   scale_color_manual(name = "", values = c("Wheat Area" = "black")) +
   scale_linetype_manual(name = "", values = c("Wheat Area" = "solid")) +
@@ -30,13 +30,13 @@ p0a <- ggplot(figure_data_area, aes(x = year)) +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p0a
+p0
 
-ggsave("output/01_area/figures/00_area.png", plot = p0a, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/00_area.pdf", plot = p0a, width = 8, height = 5)
+ggsave("output/01_area/figures/00_area.png", plot = p0, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/00_area.pdf", plot = p0, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 0b: Real Wheat Price
+# Figure 01: Real Wheat Price
 # ------------------------------------------------------------------
 
 figure_data_price <- data.frame(
@@ -44,7 +44,7 @@ figure_data_price <- data.frame(
   real_price = real_price
 )
 
-p0b <- ggplot(figure_data_price, aes(x = year)) +
+p1 <- ggplot(figure_data_price, aes(x = year)) +
   geom_line(aes(y = real_price, color = "Real Wheat Price", linetype = "Real Wheat Price"), linewidth = 0.8) +
   geom_point(aes(y = real_price, color = "Real Wheat Price"), size = 2) +
   scale_y_continuous(
@@ -53,17 +53,17 @@ p0b <- ggplot(figure_data_price, aes(x = year)) +
   ) +
   scale_color_manual(name = "", values = c("Real Wheat Price" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Real Wheat Price" = "solid")) +
-  labs(title = "Figure 0b. Real Wheat Procurement Price (per Kilogram), 2002-2023", x = "Year") +
+  labs(title = "Figure 1. Real Wheat Procurement Price (per Kilogram), 2002-2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p0b
+p1
 
-ggsave("output/01_area/figures/01_price.png", plot = p0b, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/01_price.pdf", plot = p0b, width = 8, height = 5)
+ggsave("output/01_area/figures/01_price.png", plot = p1, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/01_price.pdf", plot = p1, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 0c: Political Stability
+# Figure 02: Political Stability
 # ------------------------------------------------------------------
 
 figure_data_ps_single <- data.frame(
@@ -71,7 +71,7 @@ figure_data_ps_single <- data.frame(
   political_stability = raw_data$political_stability
 )
 
-p0c <- ggplot(figure_data_ps_single, aes(x = year)) +
+p2 <- ggplot(figure_data_ps_single, aes(x = year)) +
   geom_line(aes(y = political_stability, color = "Political Stability", linetype = "Political Stability"), linewidth = 0.8) +
   geom_point(aes(y = political_stability, color = "Political Stability"), size = 2) +
   scale_y_continuous(
@@ -79,17 +79,17 @@ p0c <- ggplot(figure_data_ps_single, aes(x = year)) +
   ) +
   scale_color_manual(name = "", values = c("Political Stability" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Political Stability" = "solid")) +
-  labs(title = "Figure 0c. Political Stability, 2002-2023", x = "Year") +
+  labs(title = "Figure 2. Political Stability, 2002-2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p0c
+p2
 
-ggsave("output/01_area/figures/02_political_stability.png", plot = p0c, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/02_political_stability.pdf", plot = p0c, width = 8, height = 5)
+ggsave("output/01_area/figures/02_political_stability.png", plot = p2, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/02_political_stability.pdf", plot = p2, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 0d: Wheat Yield
+# Figure 03: Wheat Yield
 # ------------------------------------------------------------------
 
 figure_data_yield_single <- data.frame(
@@ -97,7 +97,7 @@ figure_data_yield_single <- data.frame(
   yield = raw_data$yield
 )
 
-p0d <- ggplot(figure_data_yield_single, aes(x = year)) +
+p3 <- ggplot(figure_data_yield_single, aes(x = year)) +
   geom_line(aes(y = yield, color = "Wheat Yield", linetype = "Wheat Yield"), linewidth = 0.8) +
   geom_point(aes(y = yield, color = "Wheat Yield"), size = 2) +
   scale_y_continuous(
@@ -105,17 +105,17 @@ p0d <- ggplot(figure_data_yield_single, aes(x = year)) +
   ) +
   scale_color_manual(name = "", values = c("Wheat Yield" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Wheat Yield" = "solid")) +
-  labs(title = "Figure 0d. Wheat Yield, 2002-2023", x = "Year") +
+  labs(title = "Figure 3. Wheat Yield, 2002-2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p0d
+p3
 
-ggsave("output/01_area/figures/03_yield.png", plot = p0d, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/03_yield.pdf", plot = p0d, width = 8, height = 5)
+ggsave("output/01_area/figures/03_yield.png", plot = p3, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/03_yield.pdf", plot = p3, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 1: Crop Area vs. Lagged Wheat Price
+# Figure 04: Crop Area vs. Lagged Wheat Price
 # ------------------------------------------------------------------
 
 figure_data <- data.frame(
@@ -124,7 +124,7 @@ figure_data <- data.frame(
   lagged_price = real_price[-length(real_price)]
 )
 
-p1 <- ggplot(figure_data, aes(x = year)) +
+p4 <- ggplot(figure_data, aes(x = year)) +
   geom_line(aes(y = area*10, color = "Wheat Area", linetype = "Wheat Area"), linewidth = 0.8) +
   geom_point(aes(y = area*10, color = "Wheat Area"), size = 2) +
   geom_line(aes(y = lagged_price*1000, color = "Lagged Price", linetype = "Lagged Price"), linewidth = 0.8) +
@@ -136,17 +136,17 @@ p1 <- ggplot(figure_data, aes(x = year)) +
   ) +
   scale_color_manual(name = "", values = c("Wheat Area" = "black", "Lagged Price" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Wheat Area" = "solid", "Lagged Price" = "dashed")) +
-  labs(title = "Figure 1. Wheat Area and Lagged Real Procurement Price, 2003–2023", x = "Year") +
+  labs(title = "Figure 4. Wheat Area and Lagged Real Procurement Price, 2003–2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p1
+p4
 
-ggsave("output/01_area/figures/04_area_vs_lagged_price.png", plot = p1, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/04_area_vs_lagged_price.pdf", plot = p1, width = 8, height = 5)
+ggsave("output/01_area/figures/04_area_vs_lagged_price.png", plot = p4, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/04_area_vs_lagged_price.pdf", plot = p4, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 2: Crop Area vs. Lagged Political Stability
+# Figure 05: Crop Area vs. Lagged Political Stability
 # ------------------------------------------------------------------
 
 political_stability <- raw_data$political_stability
@@ -158,7 +158,7 @@ figure_data_ps <- data.frame(
   lagged_stability = lagged_political_stability
 )
 
-p2 <- ggplot(figure_data_ps, aes(x = year)) +
+p5 <- ggplot(figure_data_ps, aes(x = year)) +
   geom_line(aes(y = area*100, color = "Wheat Area", linetype = "Wheat Area"), linewidth = 0.8) +
   geom_point(aes(y = area*100, color = "Wheat Area"), size = 2) +
   geom_line(aes(y = lagged_stability*10000000/3, color = "Political Stability", linetype = "Political Stability"), linewidth = 0.8) +
@@ -170,17 +170,17 @@ p2 <- ggplot(figure_data_ps, aes(x = year)) +
   ) +
   scale_color_manual(name = "", values = c("Wheat Area" = "black", "Political Stability" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Wheat Area" = "solid", "Political Stability" = "dashed")) +
-  labs(title = "Figure 2. Wheat Area and Lagged Political Stability, 2003–2023", x = "Year") +
+  labs(title = "Figure 5. Wheat Area and Lagged Political Stability, 2003–2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p2
+p5
 
-ggsave("output/01_area/figures/05_area_vs_lagged_political_stability.png", plot = p2, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/05_area_vs_lagged_political_stability.pdf", plot = p2, width = 8, height = 5)
+ggsave("output/01_area/figures/05_area_vs_lagged_political_stability.png", plot = p5, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/05_area_vs_lagged_political_stability.pdf", plot = p5, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 3: Crop Area vs. Lagged Yield
+# Figure 06: Crop Area vs. Lagged Yield
 # ------------------------------------------------------------------
 
 yield <- raw_data$yield
@@ -192,7 +192,7 @@ figure_data_yield <- data.frame(
   lagged_yield = lagged_yield
 )
 
-p3 <- ggplot(figure_data_yield, aes(x = year)) +
+p6 <- ggplot(figure_data_yield, aes(x = year)) +
   geom_line(aes(y = area, color = "Wheat Area", linetype = "Wheat Area"), linewidth = 0.8) +
   geom_point(aes(y = area, color = "Wheat Area"), size = 2) +
   geom_line(aes(y = lagged_yield*1000000/2, color = "Wheat Yield", linetype = "Wheat Yield"), linewidth = 0.8) +
@@ -204,17 +204,17 @@ p3 <- ggplot(figure_data_yield, aes(x = year)) +
   ) +
   scale_color_manual(name = "", values = c("Wheat Area" = "black", "Wheat Yield" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Wheat Area" = "solid", "Wheat Yield" = "dashed")) +
-  labs(title = "Figure 3. Wheat Area and Lagged Wheat Yield, 2003–2023", x = "Year") +
+  labs(title = "Figure 6. Wheat Area and Lagged Wheat Yield, 2003–2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p3
+p6
 
-ggsave("output/01_area/figures/06_area_vs_lagged_yield.png", plot = p3, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/06_area_vs_lagged_yield.pdf", plot = p3, width = 8, height = 5)
+ggsave("output/01_area/figures/06_area_vs_lagged_yield.png", plot = p6, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/06_area_vs_lagged_yield.pdf", plot = p6, width = 8, height = 5)
 
 # ------------------------------------------------------------------
-# Figure 4: Crop Area vs. Fitted Area
+# Figure 07: Crop Area vs. Fitted Area
 # ------------------------------------------------------------------
 
 fitted_values <- exp(baseline_model$best_model$fitted.values)
@@ -226,7 +226,7 @@ figure_data_fitted <- data.frame(
 )
 
 
-p4 <- ggplot(figure_data_fitted, aes(x = year)) +
+p7 <- ggplot(figure_data_fitted, aes(x = year)) +
   geom_line(aes(y = area, color = "Wheat Area", linetype = "Wheat Area"), linewidth = 0.8) +
   geom_point(aes(y = area, color = "Wheat Area"), size = 2) +
   geom_line(aes(y = fitted_area, color = "Wheat Fitted Area", linetype = "Wheat Fitted Area"), linewidth = 0.8) +
@@ -236,11 +236,11 @@ p4 <- ggplot(figure_data_fitted, aes(x = year)) +
     name = "Wheat Area (million hectares)") +
   scale_color_manual(name = "", values = c("Wheat Area" = "black", "Wheat Fitted Area" = "#609c4f")) +
   scale_linetype_manual(name = "", values = c("Wheat Area" = "solid", "Wheat Fitted Area" = "dashed")) +
-  labs(title = "Figure 4. Wheat Area and Wheat Fitted Area, 2003–2023", x = "Year") +
+  labs(title = "Figure 7. Wheat Area and Wheat Fitted Area, 2003–2023", x = "Year") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
 
-p4
+p7
 
-ggsave("output/01_area/figures/07_area_vs_fitted_area.png", plot = p4, width = 8, height = 5, dpi = 300)
-ggsave("output/01_area/figures/07_area_vs_fitted_area.pdf", plot = p4, width = 8, height = 5)
+ggsave("output/01_area/figures/07_area_vs_fitted_area.png", plot = p7, width = 8, height = 5, dpi = 300)
+ggsave("output/01_area/figures/07_area_vs_fitted_area.pdf", plot = p7, width = 8, height = 5)

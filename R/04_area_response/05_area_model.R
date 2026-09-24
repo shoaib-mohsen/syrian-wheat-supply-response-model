@@ -60,7 +60,7 @@ source("R/functions.R")
 
 # Initializing data needed for the model
 
-ardl_data <- data %>%
+ardl_data <- full_data %>%
   select(
     year,
     ln_area,

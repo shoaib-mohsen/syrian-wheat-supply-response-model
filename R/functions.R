@@ -4,6 +4,8 @@
 # Author : Shoaib Mohsen
 
 library(sandwich)
+library(officer)
+library(flextable)
 library(ARDL)
 library(lmtest)
 library(tibble)
@@ -13,12 +15,14 @@ library(lmtest)
 library(tseries)
 library(strucchange)
 
+# ------------------------------------------------------------------------------
+# Converting R table to Word file
+# ------------------------------------------------------------------------------
 
-# Converting R table to Word file 
-get_doc <- function(tb, caption){
+get_doc <- function(tb, caption) {
   
-  # Creating a formatted flex table from the input
-  tb <- flextable::flextable(tb)
+  # Creating a formatted flextable from the input
+  tb <- flextable(tb)
   
   tb <- colformat_double(
     tb,
@@ -31,23 +35,36 @@ get_doc <- function(tb, caption){
   # Creating a Word file
   doc <- read_docx()
   
-  # Adding a table title 
-  body_add_par(doc,
-               caption,
-               style = "table title")
+  # Adding a table title
+  doc <- body_add_par(
+    doc,
+    caption,
+    style = "table title"
+  )
   
   # Inserting the table into the Word file
-  doc <- body_add_flextable(doc, value = tb)
+  doc <- body_add_flextable(
+    doc,
+    value = tb
+  )
   
   # Returning
   return(doc)
 }
 
-# Computing a correlation matrix and returning variable pairs with an absolute correlation of at least 0.8
+
+# ------------------------------------------------------------------------------
+# Computing a correlation matrix and returning variable pairs with an
+# absolute Pearson correlation of at least 0.8
+# ------------------------------------------------------------------------------
+
 get_high_corrs <- function(data) {
   
   # Computing the correlation matrix
-  cor_matrix <- cor(data %>% select(where(is.numeric)), use = "complete.obs")
+  cor_matrix <- cor(
+    data %>% select(where(is.numeric)),
+    use = "complete.obs"
+  )
   
   # Removing duplicate correlations and the diagonal
   cor_matrix[upper.tri(cor_matrix, diag = TRUE)] <- NA
@@ -64,8 +81,13 @@ get_high_corrs <- function(data) {
   return(high_corrs)
 }
 
+
+# ------------------------------------------------------------------------------
 # Generating a table of descriptive statistics
+# ------------------------------------------------------------------------------
+
 get_summary_table <- function(data) {
+  
   data %>%
     select(where(is.numeric)) %>%
     summarise(across(everything(), list(
@@ -74,15 +96,52 @@ get_summary_table <- function(data) {
       SD              = ~ sd(.x, na.rm = TRUE),
       IQR             = ~ IQR(.x, na.rm = TRUE),
       Skewness        = ~ moments::skewness(.x, na.rm = TRUE),
-      Excess_Kurtosis = ~ moments::kurtosis(.x, na.rm = TRUE) - 3
+      Excess_Kurtosis = ~ moments::kurtosis(.x, na.rm = TRUE) - 3,
+      CV              = ~ (sd(.x, na.rm = TRUE) / mean(.x, na.rm = TRUE)) * 100
     ), .names = "{.col}__{.fn}")) %>%
     pivot_longer(
       cols = everything(),
       names_to = c("Variable", "Metric"),
       names_sep = "__"
     ) %>%
-    pivot_wider(names_from = Metric, values_from = value)
+    pivot_wider(
+      names_from = Metric,
+      values_from = value
+    )
 }
+
+
+# ------------------------------------------------------------------------------
+# Detecting Outliers
+# ------------------------------------------------------------------------------
+
+detect_outliers <- function(data, var) {
+  
+  x <- data[[var]]
+  
+  qs <- quantile(
+    x,
+    c(0.25, 0.75),
+    type = 7,
+    na.rm = TRUE
+  )
+  
+  iqr <- diff(qs)
+  
+  is_out <- !is.na(x) &
+    (x < (qs[1] - 1.5 * iqr) |
+       x > (qs[2] + 1.5 * iqr))
+  
+  variable <- rep(var, times = sum(is_out))
+  
+  data.frame(
+    variable = variable,
+    year = data$year[is_out],
+    value = x[is_out]
+  )
+}
+
+
 
 
 

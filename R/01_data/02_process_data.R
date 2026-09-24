@@ -6,6 +6,7 @@
 # Loading needed packages
 
 library(dplyr)
+library(readr)
 
 # Fixing variable types
 
